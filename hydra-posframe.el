@@ -81,11 +81,16 @@ Only `background` is used in this face."
    :internal-border-color (face-attribute 'hydra-posframe-border-face :background)
    :string str
    :override-parameters hydra-posframe-parameters)
-  (let ((current-frame
-         (buffer-local-value 'posframe--frame
-                             (get-buffer hydra-posframe-buffer))))
-    (redirect-frame-focus current-frame
-                          (frame-parent current-frame))))
+  (posframe-funcall
+   hydra-posframe-buffer
+   (lambda ()
+     (fit-frame-to-buffer (selected-frame)
+                          nil
+                          (+ (count-lines (point-min) (point-max)) 1)
+                          nil
+                          nil)
+     (redirect-frame-focus (selected-frame)
+                           (frame-parent (selected-frame))))))
 
 ;;;###autoload
 (define-minor-mode hydra-posframe-mode
